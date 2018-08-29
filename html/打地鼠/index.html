@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>打地鼠小游戏</title>
+    <style>
+        html,body{
+            margin: 0;
+            height: 100%;
+        }
+        body{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: url(image/bg.jpg);
+
+            cursor: url(image/cursor.png),auto;
+        }
+        table{
+            border: 1px solid red;
+            border-collapse: collapse;
+        }
+        td{
+            width: 150px;
+            height: 150px;
+            border: 1px solid black;
+            background-image: url(image/hole.png);
+            background-repeat: no-repeat;
+            background-size: 120px 50px;
+            text-align: center;
+            background-position: center center;
+            vertical-align: bottom;
+        }
+        img{
+            position: relative;
+            top: -60px;
+            width: 80px;
+            height: 0px;
+            
+        }
+        .mouseUp{
+            animation: up 0.5s;
+            animation-fill-mode: forwards;
+        }
+        @keyframes up{
+            from{
+                height: 0;
+            }
+            to{
+                height: 70px;
+            }
+        }
+        .mouseDown{
+            animation: down 0.1s;
+            animation-fill-mode: forwards;
+
+        }
+        @keyframes down{
+            from{
+                height: 70px;
+            }
+            to{
+                height: 0;
+            }
+        }
+
+        #score{
+            width: 120px ;
+            font-size: 30px;
+            background-color:rgba(100, 100, 100, 0.6);
+            border-top-right-radius: 5px;
+            border-bottom-right-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <div id="score">得分: 0</div>
+        <br>
+        <br>
+        <audio src="audio/music.mp3" autoplay loop></audio>
+        <audio id="hit"></audio>
+        <div>
+            <table>
+                <tr>
+                    <td><img src="image/mouse.png" alt=""></td>
+                    <td><img src="image/mouse.png" alt=""></td>
+                    <td><img src="image/mouse.png" alt=""></td>
+                    <td><img src="image/mouse.png" alt=""></td>
+                </tr>
+                <tr>
+                    <td><img src="image/mouse.png" alt=""></td>
+                    <td><img src="image/mouse.png" alt=""></td>
+                    <td><img src="image/mouse.png" alt=""></td>
+                    <td><img src="image/mouse.png" alt=""></td>
+                </tr>
+                <tr>
+                    <td><img src="image/mouse.png" alt=""></td>
+                    <td><img src="image/mouse.png" alt=""></td>
+                    <td><img src="image/mouse.png" alt=""></td>
+                    <td><img src="image/mouse.png" alt=""></td>
+                </tr>
+                <tr>
+                    <td><img src="image/mouse.png" alt=""></td>
+                    <td><img src="image/mouse.png" alt=""></td>
+                    <td><img src="image/mouse.png" alt=""></td>
+                    <td><img src="image/mouse.png" alt=""></td>
+                </tr>
+            </table>
+        </div>
+    </main>
+<script src="jquery.js"></script>
+<script>
+
+    var mouses = $('img')
+    var score = 0
+
+    function showMouse(e){
+
+        var random = Math.floor(Math.random() * 16)
+
+        var mouse = mouses.get(random)
+
+        $(mouse).addClass('mouseUp').removeClass('mouseDown')
+
+        setTimeout(function(){
+            $(mouse).addClass('mouseDown').removeClass('mouseUp')
+        },2000)
+    }
+
+    function begin(){
+        setInterval(showMouse,500)
+        setInterval(showMouse,1000)
+        setInterval(showMouse,1500)
+        setInterval(showMouse,2000)
+    }
+    begin()
+
+    $('body').mousedown(function(){
+        $('body').css('cursor','url(image/cursor-down.png),auto')
+    }).mouseup(function(){
+        $('body').css('cursor','url(image/cursor.png),auto')
+    })
+
+    $(mouses).click(function(){
+        $(this).addClass('mouseDown').removeClass('mouseUp')
+        score += 10
+        $('#score').text('得分:' + score)
+        $('#hit').attr('src','audio/hit.wav').get(0).play()
+    })
+</script>
+</body>
+</html>

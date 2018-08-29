@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>打地鼠</title>
+    <style>
+        html,body{
+            height: 100%;
+            margin: 0;
+        }
+        body{
+            background-image: url(image/bg.jpg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* 光标 指针 */
+            cursor: url(image/cursor.png) , auto
+        }
+        table{
+            width: 600px;
+            height: 600px;
+            border-collapse: collapse;
+        }
+        td{
+            width: 150px;
+            height: 150px;
+            background-image: url(image/hole.png);
+            background-repeat: no-repeat;
+            background-size: 120px 50px;
+            background-position: center center;
+            text-align: center;
+            /* 设置图片从底部出现 
+            设置垂直方向的出现位置*/
+            vertical-align: bottom;
+        }
+        td img{
+            width: 80px;
+            height: 0px;
+            position: relative;
+            top: -60px;
+        }
+        .mouseUp{
+            animation: up 0.5s ;
+            /* 保持动画结束时刻的状态 */
+            animation-fill-mode: forwards;
+        }
+        @keyframes up{
+            0%{
+                height: 0;
+            }
+            100%{
+                height: 70px;
+            }
+        }
+        .mouseDown{
+            animation: down 0.1s ;
+            animation-fill-mode: forwards;
+        }
+        @keyframes down{
+            from{
+                height: 70px;
+            }
+            to{
+                height: 0px;
+            }
+        }
+
+        #defen{
+            width: 120px ;
+            padding: 0 10px 0 30px ;
+            position: relative;
+            top:-200px;
+            left: 0px;
+            font-size: 30px;
+            background-color:rgba(100, 100, 100, 0.6);
+            border-top-right-radius: 5px;
+            border-bottom-right-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <audio src="audio/music.mp3" autoplay loop></audio>
+    <audio id="dazhong"></audio>
+    <div id="defen">得分：0</div>
+    
+    <table>
+            <tr>
+                    <td><img src="image/mouse.png" alt=""></td>
+                    <td><img src="image/mouse.png" alt=""></td>
+                    <td><img src="image/mouse.png" alt=""></td>
+                    <td><img src="image/mouse.png" alt=""></td>
+                </tr>
+                <tr>
+                    <td><img src="image/mouse.png" alt=""></td>
+                    <td><img src="image/mouse.png" alt=""></td>
+                    <td><img src="image/mouse.png" alt=""></td>
+                    <td><img src="image/mouse.png" alt=""></td>
+                </tr>
+                <tr>
+                    <td><img src="image/mouse.png" alt=""></td>
+                    <td><img src="image/mouse.png" alt=""></td>
+                    <td><img src="image/mouse.png" alt=""></td>
+                    <td><img src="image/mouse.png" alt=""></td>
+                </tr>
+                <tr>
+                    <td><img src="image/mouse.png" alt=""></td>
+                    <td><img src="image/mouse.png" alt=""></td>
+                    <td><img src="image/mouse.png" alt=""></td>
+                    <td><img src="image/mouse.png" alt=""></td>
+                </tr>
+    </table>
+
+    <script src="jquery.js"></script>
+    <script>
+        // $代表一个jQuery对象
+        var mouses = $('img')
+        var fenshu = 0;
+
+        function showMouse(){
+            // 0 - 1
+             var random = Math.random() * 16
+            //  Math.floor 获取一个不大于该数值的最大整数
+             random = Math.floor(random)
+            //  获取指定的地鼠
+             var mouse = mouses.get(random)
+
+             $(mouse).addClass('mouseUp').removeClass('mouseDown')
+
+             setTimeout(function(){
+                 $(mouse).addClass('mouseDown').removeClass('mouseUp')
+             },2000)
+        }       
+        function play(){
+        setTimeout(showMouse,500)
+        setTimeout(showMouse,1000)
+        setTimeout(showMouse,1500)
+        setTimeout(showMouse,2500)
+        setTimeout(showMouse,3500)
+        setTimeout(showMouse,3000)
+        }
+        
+        setInterval(play,3000)
+
+        $('body').mousedown(function(){
+            $('body').css('cursor','url(image/cursor-down.png),auto')
+        }).mouseup(function(){
+            $('body').css('cursor','url(image/cursor.png),auto')
+        })
+
+        $(mouses).click(function(){
+            // 当前被点击的对象
+            $(this).addClass('mouseDown').removeClass('mouseUp')
+            fenshu += 10
+            $('#defen').text('得分:' + fenshu)
+
+            $('#dazhong').attr('src','audio/hit.wav').get(0).play()
+        })
+        
+    </script>
+</body>
+</html>
