@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>信息添加界面</title>
+    <style>
+        body{
+            background-color: lightgray;
+        }
+        h1 {
+            font-size: 35px;
+            text-align: center;
+            color: goldenrod;
+        }
+
+        main {
+            width: 400px;
+            background-color: deepskyblue;
+            margin: 0 auto;
+            text-align: center;
+            font-size: 20px;
+        }
+
+        label {
+            display: inline-block;
+            width: 150px;
+            text-align: right;
+            margin-top: 20px;
+        }
+
+        input {
+            height: 25px;
+            border: 1px solid gray;
+            border-radius: 7px;
+            position: relative;
+            top: -4px;
+            outline: none;
+            padding-left: 10px;
+            box-sizing: border-box;
+
+        }
+
+        button {
+            width: 60px;
+            height: 30px;
+            background-color: red;
+            color: white;
+            font-size: 20px;
+            border: 1px solid gray;
+            display: inline-block;
+            outline: none;
+        }
+        button:active{
+            background-color: green;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>新增员工录入页面</h1>
+
+    <main>
+        <br>
+        <label for="">员工姓名:</label>
+        <input name="user" type="text" placeholder="请输入员工姓名">
+        <br>
+        <label for="">员工编号:</label>
+        <input name="code" type="text" placeholder="请输入员工编号">
+        <br>
+        <label for="">员工职位:</label>
+        <input name="job" type="text" placeholder="请输入员工职位">
+        <br>
+        <label for="">员工银行卡号:</label>
+        <input name="card" type="text" placeholder="请输入员工银行卡号">
+        <br>
+        <label for="">员工联系方式:</label>
+        <input name="tel" type="text" placeholder="请输入员工联系方式">
+        <br>
+        <br>
+        <br>
+
+        <button onclick="addNewInfo()">提交</button>
+        <br>
+        <br>
+
+
+        <script>
+            var user = document.getElementsByName('user')[0]
+            var code = document.getElementsByName('code')[0]
+            var job = document.getElementsByName('job')[0]
+            var card = document.getElementsByName('card')[0]
+            var tel = document.getElementsByName('tel')[0]
+
+            function addNewInfo() {
+                var time = new Date()
+                var currentTime = time.getFullYear() + '年' + (time.getMonth() + 1) + '月'
+                    + time.getDate() + '日' +
+                    (time.getHours() < 10 ? '0' + time.getHours() : time.getHours()) + ':' +
+                    (time.getMinutes() < 10 ? '0' + time.getMinutes() : time.getMinutes()) + ':' +
+                    (time.getSeconds() < 10 ? '0' + time.getSeconds() : time.getSeconds())
+
+                var xhr = new XMLHttpRequest()
+
+                var form = new FormData()
+
+                form.append('name', user.value)
+                form.append('code', code.value)
+                form.append('job', job.value)
+                form.append('card', card.value)
+                form.append('tel', tel.value)
+                form.append('time',currentTime)
+
+                xhr.open('post', '/addNew')
+                xhr.send(form)
+
+                xhr.onreadystatechange = function(){
+                    if(xhr.readyState==4){
+                        if(xhr.responseText=='添加成功'){
+                            window.location.href = 'http://localhost:8080'
+                        }
+                        else{
+                            alert('员工信息添加失败')
+                        }
+                    }
+                }
+            }
+
+        </script>
+
+
+
+    </main>
+</body>
+
+</html>

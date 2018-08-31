@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>留言</title>
+
+    <style>
+        body {
+            background-color: whitesmoke;
+        }
+
+        label,
+        input,
+        textarea {
+            border: 1px solid gray;
+            border-radius: 5px;
+            font-size: 20px;
+            outline: none;
+            padding-left: 5px;
+        }
+
+        button {
+            width: 100px;
+            height: 30px;
+            border: 1px solid gray;
+            outline: none;
+            border-radius: 5px;
+            background-color: red;
+            color: white;
+            font-size: 20px;
+        }
+
+        button:active {
+            background-color: green;
+        }
+
+        #info {
+            width: 800px;
+            margin: 10px auto;
+
+
+        }
+
+        div {
+            font-size: 20px;
+            background-color: green;
+            color: white;
+            border: 1px solid gray;
+            border-radius: 10px;
+            padding: 10px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>llt的留言系统</h1>
+    <h3>主人寄语</h3>
+    <h4>人生得意须尽欢，莫使金樽空对月</h4>
+    <textarea name="message" id="message" cols="100" rows="5"></textarea>
+    <br>
+    <br>
+    <label for="">留言人</label>
+    <input id="user" type="text" placeholder="请输入姓名">
+    <br>
+    <br>
+    <button onclick="showMessage()">留言</button>
+    <br>
+    <br>
+    <main id="info"></main>
+
+    <script>
+
+        function showMessage() {
+
+            var textarea = document.getElementById('message')
+            var user = document.getElementById('user')
+            
+            if (textarea.value.length == 0 || user == 0) {
+                alert('请输入留言内容或者留言人！！！')
+            }
+            else {
+
+                var main = document.getElementById('info')
+
+                var time = new Date()
+                var currentTime = time.getFullYear() + '年' + (time.getMonth() + 1) + '月'
+                    + time.getDate() + '日' +
+                    (time.getHours() < 10 ? '0' + time.getHours() : time.getHours()) + ':' +
+                    (time.getMinutes() < 10 ? '0' + time.getMinutes() : time.getMinutes()) + ':' +
+                    (time.getSeconds() < 10 ? '0' + time.getSeconds() : time.getSeconds())
+
+                var xhr = new XMLHttpRequest()
+                var form = new FormData()
+
+                form.append('user', user.value)
+                form.append('text', textarea.value)
+                form.append('time', currentTime)
+
+                xhr.open('post', '/getinfo')
+                xhr.send(form)
+
+                xhr.onreadystatechange = function () {
+
+                    if (xhr.readyState == 4) {
+
+                        var stringInfo = '[' + xhr.responseText.substr(0, xhr.responseText.length - 2) + ']'
+                        var jsonInfo = JSON.parse(stringInfo)
+                        var data = []
+                        for (var i = 0; i < jsonInfo.length; i++) {
+                            var text = jsonInfo[i]
+                            data[i] = '<div>留言人: ' + text.user + '<br>留言时间: ' + text.time + '<br>留言内容: ' + text.text + '</div>'
+                        }
+
+                        main.innerHTML = data.join('<br>')
+                    }
+                }
+                 
+                user.value = ''
+                textarea.value = ''
+                textarea.focus()
+            }
+        }
+
+    </script>
+</body>
+
+</html>

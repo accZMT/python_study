@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        body {
+            background-color: lightgray;
+        }
+
+        button {
+            border: 1px solid black;
+            border-radius: 5px;
+            height: 50px;
+            font-size: 15px
+        }
+
+        button:nth-child(1) {
+            background-color: goldenrod;
+        }
+
+        button:nth-child(2) {
+            background-color: greenyellow;
+        }
+
+        main table {
+            /* width: 650px; */
+            font-size: 22px;
+            background-color: darkgreen;
+            color: whitesmoke;
+            margin: 50px auto;
+            text-align: center;
+            border-collapse: collapse;
+
+            /* 强制单词截短 */
+            /* word-break: break-all; */
+            /* 自动换行 */
+            /* word-wrap: break-word; */
+        }
+
+        th,td{
+            height: 50px;
+            border : 1px solid lightgray;
+        }
+     
+    </style>
+</head>
+
+<body>
+    <button onclick="showAllInfo()">展示所有员工信息</button>
+    <button onclick="clickToNewPage()">增加新的员工</button>
+
+    <main >
+        <table id="text">
+            <!-- <th>
+                <td>员工姓名</td>
+                <td>员工编号</td>
+                <td>员工职位</td>
+                <td>员工卡号</td>
+                <td>联系方式</td>
+                <td>入职时间</td>
+            </th> -->
+        </table>
+    </main>
+    <script src="format.js"></script>
+    <script>
+        function clickToNewPage() {
+            window.location.href = 'new.html'
+        }
+
+        function showAllInfo() {
+            // var main = document.createElement('main')
+            // main.style.width = '800px'
+            // main.style.backgroundColor = 'deepskyblue'
+            // main.style.margin = '50px auto'
+
+            // document.body.appendChild(main)
+
+            var main = document.getElementById('text')
+
+            var xhr = new XMLHttpRequest()
+
+            xhr.open('get', '/getinfo')
+
+            xhr.send()
+
+           
+            xhr.onreadystatechange = function () {
+
+                if (xhr.readyState == 4) {
+
+                    var jsonInfo = JSON.parse(xhr.responseText)
+
+                    // main.innerText = xhr.responseText 
+                    var text = []
+                    for (var index = 0; index < jsonInfo.length; index++) {
+
+                        var info = jsonInfo[index]
+                        var data = info.data
+                        var a = '<tr><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td><td>{4}</td><td>{5}</td></tr> '
+                       
+                        text[index] = a.format(data.name, data.code, data.job, data.card, data.tel, data.time) 
+                    }
+                    main.innerHTML ='<tr><th>员工姓名</th><th>员工编号</th><th>员工职位</th><th>员工卡号</th><th>员工联系方式</th><th>入职时间</th></tr>' + text.join('')
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>
